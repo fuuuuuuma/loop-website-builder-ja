@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ループで完璧なWebサイトを1発生成 — 1枚まとめ | AIエージェント/Kawaru</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  /* ===== セマンティックトークン（テーマはこの :root 値だけ差し替え）===== */
+  :root{
+    --brand:#1C3461; --brand-deep:#16284A; --brand-soft:rgba(28,52,97,.08); --brand-line:rgba(28,52,97,.22);
+    --accent:#5BBCD4; --accent-deep:#2C7A93; --accent-soft:rgba(91,188,212,.16);
+    --bg:#F7FAFC; --paper:#FFFFFF; --ink:#1C3461; --ink-mid:#4A6080; --ink-sub:#8098B4; --line:rgba(28,52,97,.12);
+    --head:'Noto Sans JP';
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--ink);font-family:'Noto Sans JP',-apple-system,'Hiragino Sans','Yu Gothic',sans-serif;line-height:1.7;}
+  .doc{max-width:880px;margin:0 auto;background:var(--paper);box-shadow:0 0 60px rgba(0,0,0,.10);overflow:hidden;}
+  .draft-tag{background:var(--brand-deep);color:#fff;font-size:12px;font-weight:700;text-align:center;padding:7px;letter-spacing:.4px;}
+  /* hero */
+  .hero{position:relative;background:linear-gradient(160deg,var(--brand-soft) 0%,var(--bg) 70%);padding:50px 52px 44px;border-bottom:3px solid var(--brand-line);overflow:hidden;}
+  .hero .coin{position:absolute;width:160px;height:160px;border-radius:50%;background:var(--accent);opacity:.15;top:-52px;right:-36px;}
+  .hero .chan{display:inline-flex;align-items:center;gap:12px;margin-bottom:18px;}
+  .hero .chan img{width:50px;height:50px;border-radius:50%;border:2px solid #fff;box-shadow:0 2px 10px rgba(0,0,0,.16);}
+  .hero .chan b{font-family:var(--head);font-weight:900;color:var(--brand-deep);font-size:17px;}
+  .hero .chan b small{display:block;font-size:11px;color:var(--ink-mid);font-weight:500;letter-spacing:.4px;}
+  .eyebrow{font-family:var(--head);font-weight:900;color:var(--brand-deep);letter-spacing:2px;font-size:13px;display:inline-flex;align-items:center;gap:9px;margin-bottom:12px;}
+  .eyebrow::before{content:'▸';background:var(--accent);color:var(--ink);border-radius:50%;width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;}
+  h1{font-family:var(--head);font-weight:900;font-size:40px;line-height:1.25;color:var(--ink);}
+  h1 .hl{color:var(--brand-deep);}
+  .hero p.sub{font-size:18px;color:var(--ink-mid);font-weight:700;margin-top:14px;max-width:660px;}
+  .meta{margin-top:20px;display:flex;gap:9px;flex-wrap:wrap;}
+  .meta span{background:var(--paper);border:1.5px solid var(--line);border-radius:999px;padding:6px 15px;font-size:13px;font-weight:700;color:var(--ink-mid);}
+  .meta span.k{background:var(--accent-soft);border-color:var(--accent);color:var(--ink);}
+  /* toc */
+  .tocbar{background:var(--brand-soft);border-bottom:1px solid var(--line);padding:16px 52px;display:flex;flex-wrap:wrap;gap:8px;}
+  .tocbar a{font-size:13px;font-weight:700;color:var(--brand-deep);text-decoration:none;background:var(--paper);border:1px solid var(--line);border-radius:999px;padding:5px 13px;}
+  .tocbar a:hover{border-color:var(--brand);}
+  /* section */
+  section{padding:40px 52px;border-bottom:1px solid var(--line);}
+  .sec-h{display:flex;align-items:center;gap:13px;margin-bottom:22px;}
+  .sec-h .no{flex-shrink:0;width:38px;height:38px;border-radius:50%;background:var(--accent);color:var(--ink);font-family:var(--head);font-weight:900;font-size:18px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 0 var(--accent-deep);}
+  .sec-h h2{font-family:var(--head);font-weight:900;font-size:25px;color:var(--ink);}
+  p.body{font-size:16px;color:var(--ink);margin-bottom:12px;}
+  p.note{font-size:13px;color:var(--ink-mid);} .hl{color:var(--brand-deep);font-weight:700;} .hl-a{color:var(--accent-deep);font-weight:700;}
+  .lead{font-size:17px;color:var(--ink-mid);font-weight:700;}
+  /* TL;DR */
+  .tldr{display:grid;grid-template-columns:1fr 1fr 1fr;gap:13px;}
+  .tldr .t{background:var(--bg);border:1.5px solid var(--line);border-left:4px solid var(--accent);border-radius:12px;padding:16px 15px;}
+  .tldr .t .k{font-family:var(--head);font-weight:900;color:var(--ink);font-size:13px;margin-bottom:6px;}
+  .tldr .t p{font-size:14px;font-weight:700;color:var(--ink);line-height:1.5;}
+  /* lists */
+  .bullets{list-style:none;} .bullets li{font-size:16px;font-weight:700;color:var(--ink);padding:10px 0 10px 30px;position:relative;border-bottom:1px solid var(--line);}
+  .bullets li::before{content:'';position:absolute;left:2px;top:50%;transform:translateY(-50%);width:11px;height:11px;border-radius:50%;background:var(--accent);}
+  .checks{list-style:none;} .checks li{font-size:15px;color:var(--ink);padding:7px 0 7px 26px;position:relative;}
+  .checks li::before{content:'✔';position:absolute;left:2px;color:var(--brand);font-weight:900;}
+  /* 2-col */
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:center;}
+  .imgbox{border:2px dashed var(--brand-line);border-radius:12px;background:var(--brand-soft);display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--brand-deep);font-weight:700;text-align:center;padding:18px;min-height:170px;}
+  .imgbox .ic{font-size:28px;margin-bottom:6px;} .imgbox small{display:block;color:var(--ink-mid);font-weight:500;font-size:11.5px;margin-top:4px;}
+  /* flow */
+  .flow{display:flex;align-items:stretch;gap:0;}
+  .flow .step{flex:1;background:var(--bg);border:1.5px solid var(--line);border-top:4px solid var(--brand);border-radius:10px;padding:13px 9px;text-align:center;}
+  .flow .step .t{font-family:var(--head);font-weight:900;font-size:14px;color:var(--ink);margin-bottom:4px;}
+  .flow .step .d{font-size:11px;color:var(--ink-mid);line-height:1.4;}
+  .flow .arrow{display:flex;align-items:center;color:var(--accent);font-size:20px;font-weight:900;padding:0 4px;}
+  /* stats */
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;}
+  .stat{background:var(--bg);border:1.5px solid var(--line);border-radius:12px;padding:18px;text-align:center;}
+  .stat .n{font-family:var(--head);font-size:36px;font-weight:900;color:var(--brand-deep);line-height:1;} .stat .n small{font-size:16px;}
+  .stat .u{font-size:12px;color:var(--ink-sub);margin-top:4px;} .stat .l{font-size:13px;font-weight:700;color:var(--ink);margin-top:6px;}
+  /* cards */
+  .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;}
+  .cards .c{background:var(--bg);border:1.5px solid var(--line);border-radius:13px;padding:18px 15px;text-align:center;}
+  .cards .c.accent{border-color:var(--brand);border-width:2px;background:var(--paper);}
+  .cards .c .pin{width:38px;height:38px;border-radius:50%;background:var(--accent);color:var(--ink);font-family:var(--head);font-weight:900;font-size:17px;display:flex;align-items:center;justify-content:center;margin:0 auto 10px;box-shadow:0 2px 0 var(--accent-deep);}
+  .cards .c h3{font-family:var(--head);font-weight:900;font-size:16px;color:var(--ink);margin-bottom:6px;} .cards .c p{font-size:13px;color:var(--ink-mid);line-height:1.55;}
+  .cards .c .mark{font-size:11px;font-weight:700;color:var(--brand-deep);margin-top:7px;}
+  /* before/after */
+  .ba{display:flex;align-items:stretch;gap:14px;}
+  .ba .panel{flex:1;background:var(--bg);border:1.5px solid var(--line);border-radius:12px;padding:18px;}
+  .ba .panel.after{border-color:var(--brand);border-width:2px;background:var(--paper);}
+  .ba .panel .tag{font-family:var(--head);font-weight:900;font-size:12px;border-radius:999px;padding:3px 11px;display:inline-block;margin-bottom:9px;}
+  .ba .panel.before .tag{background:var(--line);color:var(--ink-mid);} .ba .panel.after .tag{background:var(--brand);color:#fff;}
+  .ba .panel ul{list-style:none;} .ba .panel li{font-size:14px;color:var(--ink);padding:5px 0 5px 20px;position:relative;}
+  .ba .panel.before li::before{content:'×';position:absolute;left:0;color:var(--ink-sub);font-weight:900;}
+  .ba .panel.after li::before{content:'○';position:absolute;left:0;color:var(--brand);font-weight:900;}
+  .ba .mid{display:flex;align-items:center;color:var(--accent);font-size:26px;font-weight:900;}
+  /* table */
+  table.cmp{width:100%;border-collapse:separate;border-spacing:0;font-size:14px;border:1.5px solid var(--line);border-radius:12px;overflow:hidden;margin-bottom:14px;}
+  table.cmp th,table.cmp td{padding:11px 14px;text-align:left;border-bottom:1px solid var(--line);}
+  table.cmp thead th{background:var(--ink);color:#fff;font-family:var(--head);font-weight:700;}
+  table.cmp thead th:first-child{background:var(--brand-deep);}
+  table.cmp tbody tr:last-child td{border-bottom:none;} table.cmp td:first-child{font-weight:700;}
+  table.cmp .yes{color:var(--brand-deep);font-weight:900;} table.cmp .no{color:var(--ink-sub);}
+  /* price */
+  .price{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;}
+  .price .p{background:var(--bg);border:1.5px solid var(--line);border-radius:13px;padding:18px 15px;text-align:center;}
+  .price .p.best{border:2px solid var(--accent);position:relative;background:var(--paper);}
+  .price .p.best::before{content:'人気';position:absolute;top:-11px;left:50%;transform:translateX(-50%);background:var(--accent);color:var(--ink);font-family:var(--head);font-weight:900;font-size:11px;border-radius:999px;padding:2px 12px;}
+  .price .p .name{font-family:var(--head);font-weight:900;font-size:15px;color:var(--ink);}
+  .price .p .amt{font-family:var(--head);font-size:28px;font-weight:900;color:var(--brand-deep);margin:6px 0;} .price .p .amt small{font-size:12px;color:var(--ink-sub);}
+  .price .p ul{list-style:none;text-align:left;margin-top:8px;} .price .p li{font-size:12px;color:var(--ink-mid);padding:4px 0 4px 18px;position:relative;}
+  .price .p li::before{content:'✔';position:absolute;left:0;color:var(--brand);}
+  /* feature grid */
+  .feat{display:grid;grid-template-columns:repeat(4,1fr);gap:11px;}
+  .feat .f{background:var(--bg);border:1.5px solid var(--line);border-radius:11px;padding:13px;text-align:center;}
+  .feat .f .ic{width:34px;height:34px;border-radius:9px;background:var(--brand-soft);color:var(--brand-deep);font-family:var(--head);font-weight:900;display:flex;align-items:center;justify-content:center;margin:0 auto 7px;}
+  .feat .f b{font-size:13px;color:var(--ink);display:block;} .feat .f span{font-size:11px;color:var(--ink-mid);}
+  /* map */
+  .map{list-style:none;} .map li{display:flex;align-items:center;gap:12px;font-size:15px;font-weight:600;color:var(--ink);padding:11px 14px;margin-bottom:9px;background:var(--bg);border:1.5px solid var(--line);border-left:4px solid var(--brand);border-radius:11px;}
+  .map li .q{flex:1;} .map li .ar{color:var(--accent);font-weight:900;} .map li .a{flex:1.3;color:var(--brand-deep);font-weight:700;}
+  /* steps */
+  .steps{list-style:none;} .steps li{font-size:15px;font-weight:600;color:var(--ink);padding:11px 14px 11px 50px;position:relative;margin-bottom:9px;background:var(--bg);border:1.5px solid var(--line);border-left:4px solid var(--brand);border-radius:11px;}
+  .steps li .n{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:27px;height:27px;background:var(--accent);color:var(--ink);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--head);font-weight:900;font-size:13px;box-shadow:0 2px 0 var(--accent-deep);}
+  /* prompt */
+  .prompt{font-family:ui-monospace,Menlo,monospace;font-size:13px;background:var(--ink);color:#ECECEA;border-radius:10px;padding:14px 16px;line-height:1.65;margin-top:10px;}
+  .prompt .c{color:var(--accent);} .prompt .cm{color:var(--ink-sub);}
+  /* cycle */
+  .cycle{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;}
+  .cycle .node{width:120px;height:120px;border-radius:50%;background:var(--brand-soft);border:2px solid var(--brand);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:8px;}
+  .cycle .node b{font-family:var(--head);font-size:14px;color:var(--brand-deep);} .cycle .node span{font-size:10.5px;color:var(--ink-mid);}
+  .cycle .ar{color:var(--accent);font-size:22px;font-weight:900;}
+  /* faq */
+  .faq .qa{background:var(--bg);border:1.5px solid var(--line);border-radius:11px;padding:13px 16px;margin-bottom:9px;}
+  .faq .qa .q{font-family:var(--head);font-weight:900;font-size:15px;color:var(--brand-deep);} .faq .qa .q::before{content:'Q. ';color:var(--accent-deep);}
+  .faq .qa .a{font-size:14px;color:var(--ink-mid);margin-top:4px;} .faq .qa .a::before{content:'A. ';color:var(--ink);font-weight:700;}
+  /* timeline */
+  .timeline .row{display:flex;gap:14px;align-items:flex-start;padding:11px 0;border-bottom:1px solid var(--line);}
+  .timeline .tbadge{flex-shrink:0;background:var(--brand);color:#fff;font-family:var(--head);font-weight:900;border-radius:7px;padding:5px 12px;font-size:13px;min-width:84px;text-align:center;}
+  .timeline .row b{font-family:var(--head);font-size:15px;color:var(--ink);} .timeline .row p{font-size:13px;color:var(--ink-mid);margin-top:2px;}
+  /* note box */
+  .box{background:var(--accent-soft);border:1.5px solid var(--accent);border-radius:12px;padding:18px 20px;}
+  .box h3{font-family:var(--head);font-weight:900;color:var(--accent-deep);font-size:16px;margin-bottom:8px;}
+  .box ul{margin-left:18px;font-size:14px;color:var(--ink);} .box li{margin-bottom:5px;}
+  /* footer */
+  footer{background:var(--ink);color:#EBEBE7;padding:36px 52px;}
+  footer .frow{display:flex;justify-content:space-between;align-items:center;gap:18px;flex-wrap:wrap;}
+  footer .lg{display:flex;align-items:center;gap:11px;} footer .lg img{width:44px;height:44px;border-radius:50%;}
+  footer .lg b{font-family:var(--head);font-weight:900;color:#fff;font-size:15px;} footer .lg b small{display:block;font-size:11px;color:#9C9C96;font-weight:500;}
+  footer .cta{background:var(--accent);color:var(--ink);border-radius:999px;padding:11px 24px;font-family:var(--head);font-weight:900;font-size:14px;text-decoration:none;display:inline-flex;align-items:center;gap:7px;}
+  footer .src{font-size:12px;color:#9C9C96;margin-top:16px;line-height:1.8;} footer .src a{color:var(--accent);text-decoration:none;}
+  .secsub{font-family:var(--head);font-weight:900;font-size:15px;color:var(--ink);margin:18px 0 10px;}
+</style>
+</head>
+<body>
+<svg style="display:none">
+  <symbol id="kawaru-logo" viewBox="0 0 406 93">
+    <rect x="6.67572e-06" y="13.4815" width="7.93029" height="74.5447" fill="currentColor"/>
+    <path d="M18.2397 52.7235L24.2772 47.5817L57.8911 88.0582L48.3318 88.0582L18.2397 52.7235Z" fill="#5BBCD4"/>
+    <path d="M34.8933 49.5514L40.9308 44.4096L77.2278 88.0366L67.4075 88.0262L34.8933 49.5514Z" fill="#5BBCD4"/>
+    <rect x="57.1908" y="2.92276" width="7.93029" height="83.5485" transform="rotate(42.3764 57.1908 2.92276)" fill="currentColor"/>
+    <rect x="59.4772" width="7.93029" height="22.2048" fill="currentColor"/>
+    <rect x="44.4096" y="7.9303" width="7.93029" height="22.9978" transform="rotate(-90 44.4096 7.9303)" fill="currentColor"/>
+    <path d="M110.882 61.3999L110.204 47.3281L135.413 20.7649H148.958L126.233 45.2211L119.46 52.4451L110.882 61.3999ZM99.9703 73.4399V20.7649H112.086V73.4399H99.9703ZM136.015 73.4399L117.278 50.4886L125.254 41.8349L150.237 73.4399H136.015ZM181.053 73.4399V65.5386L180.301 63.8079V49.6609C180.301 47.1525 179.523 45.196 177.968 43.7914C176.463 42.3867 174.13 41.6844 170.97 41.6844C168.813 41.6844 166.681 42.0355 164.574 42.7379C162.517 43.39 160.761 44.293 159.306 45.4469L155.092 37.2446C157.299 35.6895 159.958 34.4855 163.069 33.6326C166.179 32.7798 169.339 32.3534 172.55 32.3534C178.721 32.3534 183.512 33.8082 186.923 36.7179C190.334 39.6275 192.04 44.1676 192.04 50.3381V73.4399H181.053ZM168.712 74.0419C165.552 74.0419 162.843 73.5151 160.585 72.4616C158.328 71.358 156.597 69.878 155.393 68.0219C154.189 66.1657 153.587 64.0838 153.587 61.7761C153.587 59.3681 154.164 57.2611 155.318 55.4551C156.522 53.6491 158.403 52.2445 160.962 51.2411C163.52 50.1876 166.856 49.6609 170.97 49.6609H181.731V56.5086H172.249C169.49 56.5086 167.584 56.9601 166.53 57.8631C165.527 58.7661 165.025 59.8949 165.025 61.2494C165.025 62.7544 165.602 63.9584 166.756 64.8614C167.96 65.7142 169.59 66.1406 171.647 66.1406C173.604 66.1406 175.359 65.6891 176.915 64.7861C178.47 63.833 179.599 62.4534 180.301 60.6474L182.107 66.0654C181.254 68.674 179.699 70.6556 177.441 72.0101C175.184 73.3646 172.274 74.0419 168.712 74.0419ZM213.443 73.4399L198.844 32.9554H209.906L222.021 67.7961H216.754L229.396 32.9554H239.329L251.594 67.7961H246.327L258.818 32.9554H269.203L254.529 73.4399H243.166L232.406 43.5656H235.867L224.73 73.4399H213.443ZM300.427 73.4399V65.5386L299.675 63.8079V49.6609C299.675 47.1525 298.897 45.196 297.342 43.7914C295.837 42.3867 293.504 41.6844 290.344 41.6844C288.187 41.6844 286.055 42.0355 283.948 42.7379C281.891 43.39 280.135 44.293 278.68 45.4469L274.466 37.2446C276.674 35.6895 279.332 34.4855 282.443 33.6326C285.553 32.7798 288.714 32.3534 291.924 32.3534C298.095 32.3534 302.886 33.8082 306.297 36.7179C309.708 39.6275 311.414 44.1676 311.414 50.3381V73.4399H300.427ZM288.086 74.0419C284.926 74.0419 282.217 73.5151 279.959 72.4616C277.702 71.358 275.971 69.878 274.767 68.0219C273.563 66.1657 272.961 64.0838 272.961 61.7761C272.961 59.3681 273.538 57.2611 274.692 55.4551C275.896 53.6491 277.777 52.2445 280.336 51.2411C282.894 50.1876 286.23 49.6609 290.344 49.6609H301.105V56.5086H291.623C288.864 56.5086 286.958 56.9601 285.904 57.8631C284.901 58.7661 284.399 59.8949 284.399 61.2494C284.399 62.7544 284.976 63.9584 286.13 64.8614C287.334 65.7142 288.964 66.1406 291.021 66.1406C292.978 66.1406 294.734 65.6891 296.289 64.7861C297.844 63.833 298.973 62.4534 299.675 60.6474L301.481 66.0654C300.628 68.674 299.073 70.6556 296.815 72.0101C294.558 73.3646 291.648 74.0419 288.086 74.0419ZM324.296 73.4399V32.9554H335.508V44.3934L333.928 41.0824C335.132 38.2229 337.063 36.0657 339.722 34.6109C342.381 33.1059 345.617 32.3534 349.429 32.3534V43.1894C348.928 43.1392 348.476 43.1141 348.075 43.1141C347.674 43.064 347.247 43.0389 346.796 43.0389C343.585 43.0389 340.976 43.967 338.97 45.8231C337.013 47.6291 336.035 50.4635 336.035 54.3264V73.4399H324.296ZM376.043 74.0419C372.681 74.0419 369.671 73.3897 367.013 72.0854C364.404 70.781 362.372 68.7995 360.917 66.1406C359.462 63.4316 358.735 59.9952 358.735 55.8314V32.9554H370.474V54.1006C370.474 57.4618 371.176 59.945 372.581 61.5504C374.036 63.1055 376.068 63.8831 378.676 63.8831C380.482 63.8831 382.088 63.5069 383.492 62.7544C384.897 61.9517 386.001 60.7477 386.803 59.1424C387.606 57.4869 388.007 55.43 388.007 52.9719V32.9554H399.746V73.4399H388.609V62.3029L390.641 65.5386C389.287 68.348 387.28 70.48 384.621 71.9349C382.012 73.3395 379.153 74.0419 376.043 74.0419Z" fill="currentColor"/>
+  </symbol>
+</svg>
+
+<div class="doc">
+
+  <div class="hero">
+    <span class="coin"></span>
+    <div class="chan"><svg width="132" height="30" style="color:var(--brand)"><use href="#kawaru-logo"/></svg></div>
+    <div class="eyebrow">ONE-PAGE GUIDE</div>
+    <h1><span class="hl">ループ</span>で「完璧なWebサイト」を<br>1発生成する方法</h1>
+    <p class="sub">AIに1回頼むだけでは“ガワ”で止まる。作る役と採点役を分けて回す——その考え方で、ボタンの押した先まで動くサイトを仕上げる。この1ページに全体像・使い方・プレゼントまで。</p>
+    <div class="meta"><span class="k">2026年版</span><span>初心者向け</span><span>所要10分</span><span>プレゼントあり</span><span>出典つき</span></div>
+  </div>
+
+  <div class="tocbar">
+    <a href="#s1">① ループとは/全体像</a><a href="#s2">② なぜ1発でダメ</a><a href="#s3">③ 3原則</a><a href="#s4">④ 4種類/必要な3つ</a>
+    <a href="#s5">⑤ 壁打ち→goal→採点</a><a href="#s6">⑥ 使い方</a><a href="#s7">⑦ 側だけダメ/Simple</a><a href="#s8">⑧ FAQ・プレゼント</a>
+  </div>
+
+  <!-- TL;DR -->
+  <section>
+    <div class="sec-h"><div class="no">!</div><h2>まず3行で</h2></div>
+    <div class="tldr">
+      <div class="t"><div class="k">POINT 1</div><p>1発で完璧は出ない。合格条件を決め、達成まで繰り返す＝ループ</p></div>
+      <div class="t"><div class="k">POINT 2</div><p>作る役と採点役を分ける。サブエージェントに100点まで採点させる</p></div>
+      <div class="t"><div class="k">POINT 3</div><p>側だけ作らない×Simple is the best。押した先まで、要素は絞る</p></div>
+    </div>
+    <div class="secsub">こんな悩み、ありませんか？</div>
+    <ul class="bullets"><li>見た目はできたのに、ボタンを押しても動かない</li><li>リンクが「＃」のまま／スマホで崩れる</li><li>色やフォントがバラバラで安っぽい</li></ul>
+  </section>
+
+  <!-- 1 ループとは + 全体像 -->
+  <section id="s1">
+    <div class="sec-h"><div class="no">1</div><h2>ループとは？／全体像</h2></div>
+    <div class="row2">
+      <div><p class="body">ループとは、AIが <span class="hl">「止まる条件に達するまで、作って→確かめて→直すを自分で繰り返す」</span> こと。人が毎回チェックして直しを指示する必要が減ります。料理でいえば「味見しながら仕上げる」感覚です。</p>
+        <p class="note">✅ 出典: Anthropic「Getting Started with Loops」(2026-06-30)</p></div>
+      <div style="display:flex;flex-direction:column;gap:8px;align-items:center;background:var(--brand-soft);border:2px solid var(--brand);border-radius:12px;padding:20px;min-height:170px;justify-content:center;">
+        <b style="font-family:var(--head);color:var(--brand-deep);font-size:15px;">作る → 確かめる → 直す</b>
+        <div style="font-size:34px;color:var(--accent);font-weight:900;">↻</div>
+        <span style="font-size:12px;color:var(--ink-mid);text-align:center;">「合格」に達するまで<br>この輪を回す</span>
+      </div>
+    </div>
+    <div class="secsub">全体の流れ</div>
+    <div class="flow">
+      <div class="step"><div class="t">① 壁打ち</div><div class="d">目的とゴール</div></div><div class="arrow">→</div>
+      <div class="step"><div class="t">② 作る</div><div class="d">generator</div></div><div class="arrow">→</div>
+      <div class="step"><div class="t">③ 採点</div><div class="d">別のAIが0-100</div></div><div class="arrow">→</div>
+      <div class="step"><div class="t">④ 直す</div><div class="d">100点まで繰り返す</div></div>
+    </div>
+  </section>
+
+  <!-- 2 なぜ1発でダメ -->
+  <section id="s2">
+    <div class="sec-h"><div class="no">2</div><h2>なぜ「1発」では完璧が出ないのか</h2></div>
+    <div class="ba">
+      <div class="panel before"><span class="tag">1回だけ頼む</span><ul><li>AIは“動くと思う”ものを返す</li><li>合っているか人が毎回チェック</li><li>ボタン・リンクの抜けが残る</li></ul></div>
+      <div class="mid">→</div>
+      <div class="panel after"><span class="tag">ループで回す</span><ul><li>合格条件をAIが自分で検証</li><li>直しまでAIが自走</li><li>「動かない箇所」を潰しきる</li></ul></div>
+    </div>
+    <div class="secsub">Webは「合格」を数字で決められる</div>
+    <div class="stats">
+      <div class="stat"><div class="n">0<small>件</small></div><div class="u">リンク切れ / エラー</div><div class="l">機能の合格ライン</div></div>
+      <div class="stat"><div class="n">90<small>+</small></div><div class="u">Lighthouse</div><div class="l">速度・品質</div></div>
+      <div class="stat"><div class="n">0<small>px</small></div><div class="u">390pxで横はみ出し</div><div class="l">モバイル</div></div>
+    </div>
+    <p class="note" style="margin-top:10px;">✅「チェックが定量的なほど、AIは自己検証しやすい」——公式ブログ</p>
+  </section>
+
+  <!-- 3 3原則 -->
+  <section id="s3">
+    <div class="sec-h"><div class="no">3</div><h2>効くループの3原則</h2></div>
+    <div class="cards">
+      <div class="c"><div class="pin">1</div><h3>検証できる形に</h3><p>「良い感じ」でなく数えられるチェックに</p><p class="mark">✅ 公式ブログ</p></div>
+      <div class="c accent"><div class="pin">2</div><h3>作る≠採点</h3><p>自分で甘く採点しない。別のAIに採点させる</p><p class="mark">✅ maker≠checker</p></div>
+      <div class="c"><div class="pin">3</div><h3>シンプルから</h3><p>小さな仕事に複雑なループは要らない</p><p class="mark">✅ 公式ブログ</p></div>
+    </div>
+  </section>
+
+  <!-- 4 4種類 + 必要な3つ -->
+  <section id="s4">
+    <div class="sec-h"><div class="no">4</div><h2>ループ4種類／必要な3つ</h2></div>
+    <div class="secsub">ループの4種類（公式の分類）</div>
+    <table class="cmp"><thead><tr><th>種類</th><th>止まる条件</th><th>向いている仕事</th></tr></thead>
+      <tbody>
+      <tr><td>ターン型</td><td>AIが「できた」と判断</td><td>短い・単発</td></tr>
+      <tr><td class="yes">ゴール型 /goal</td><td class="yes">ゴール達成 or 上限</td><td class="yes">サイト制作はこれ</td></tr>
+      <tr><td>時間型 /loop</td><td>完了 or 停止</td><td>定期・監視</td></tr>
+      <tr><td>プロアクティブ型</td><td>目標達成まで自動</td><td>定型の運用</td></tr></tbody></table>
+    <div class="secsub">Webサイト作りに必要な3つ</div>
+    <table class="cmp"><thead><tr><th>必要なもの</th><th>なぜ</th></tr></thead>
+      <tbody>
+      <tr><td class="yes">① 参考サイト</td><td>近い雰囲気を1〜2本＝デザインの採点基準になる</td></tr>
+      <tr><td class="yes">② コンポーネント</td><td>部品名を知る＝「ここは○○を使って」と一言で頼める</td></tr>
+      <tr><td class="yes">③ 壁打ち→ループ</td><td>仕様を固め、サブエージェント採点で100点まで回す</td></tr></tbody></table>
+  </section>
+
+  <!-- 5 壁打ち→goal→採点 -->
+  <section id="s5">
+    <div class="sec-h"><div class="no">5</div><h2>壁打ち → /goal → サブエージェント採点</h2></div>
+    <div class="flow">
+      <div class="step"><div class="t">壁打ち</div><div class="d">一問一答で仕様</div></div><div class="arrow">→</div>
+      <div class="step"><div class="t">/goal</div><div class="d">合格条件で自走</div></div><div class="arrow">→</div>
+      <div class="step"><div class="t">採点</div><div class="d">4観点を0-100</div></div><div class="arrow">→</div>
+      <div class="step"><div class="t">合格</div><div class="d">100点で公開</div></div>
+    </div>
+    <div class="secsub">送るのはこれだけ</div>
+    <div class="prompt"><span class="c">/goal</span> 仕様どおりのサイトを、<span class="c">3体以上のサブエージェント</span>が各観点で<span class="c">100点</span>を出すまで作り込む。<br>採点はサブエージェントが行い、自分では採点しない。側だけで止めず、全ボタン・リンク・フォームの押した先まで動かす。</div>
+    <div class="secsub">サブエージェントが採点する4観点</div>
+    <div class="feat">
+      <div class="f"><div class="ic">機</div><b>機能</b><span>全導線が動く</span></div>
+      <div class="f"><div class="ic">デ</div><b>デザイン</b><span>参考準拠・一貫</span></div>
+      <div class="f"><div class="ic">モ</div><b>モバイル&速度</b><span>崩れ0・90+</span></div>
+      <div class="f"><div class="ic">法</div><b>コピー&法規制</b><span>誇張なし・表記</span></div>
+    </div>
+    <p class="note" style="margin-top:10px;">✅ 壁打ちは GrillMe（MIT）、ループは goal-setter / makeloop（MIT）と公式ブログ由来</p>
+  </section>
+
+  <!-- 6 使い方 -->
+  <section id="s6">
+    <div class="sec-h"><div class="no">6</div><h2>使い方（初心者基準・あなたは監督）</h2></div>
+    <div class="secsub">こんな悩み → こう頼むだけ</div>
+    <ul class="map">
+      <li><span class="q">「ガワだけになる」</span><span class="ar">→</span><span class="a">「今すぐ作らず、まず壁打ちして」</span></li>
+      <li><span class="q">「ボタンが動かない」</span><span class="ar">→</span><span class="a">「全導線を実機で押して不具合を一覧に」</span></li>
+      <li><span class="q">「良し悪しが分からない」</span><span class="ar">→</span><span class="a">「サブエージェントに0-100で採点させて」</span></li>
+    </ul>
+    <div class="secsub">すぐ試せるプロンプト</div>
+    <div class="prompt"><span class="cm"># まず壁打ちから</span><br><span class="c">&gt;</span> 今すぐ作らないで。1問ずつ推奨案つきで壁打ちして、目的/相手/ゴール/各ボタンの押した先を仕様にまとめて。</div>
+    <div class="secsub">実践ステップ</div>
+    <ul class="steps">
+      <li><span class="n">1</span>参考サイトを1〜2本決める（トンマナの基準）</li>
+      <li><span class="n">2</span>壁打ちで目的・ゴール・押した先を固める</li>
+      <li><span class="n">3</span>DESIGN.mdを1枚選んで配色を固定</li>
+      <li><span class="n">4</span>/goalで採点→100点→公開（人間確認）</li>
+    </ul>
+  </section>
+
+  <!-- 7 側だけダメ / Simple -->
+  <section id="s7">
+    <div class="sec-h"><div class="no">7</div><h2>側だけ作らない × Simple is the best</h2></div>
+    <div class="ba">
+      <div class="panel before"><span class="tag">これは未完成</span><ul><li>見た目だけ／リンクが「＃」</li><li>ボタンが無反応</li><li>フォームが送れない</li></ul></div>
+      <div class="mid">→</div>
+      <div class="panel after"><span class="tag">ここまでで完璧</span><ul><li>全リンクが実在の行き先へ</li><li>全ボタンが反応・送信が成立</li><li>戻れる（実機で確認）</li></ul></div>
+    </div>
+    <div class="secsub">Simple is the best</div>
+    <ul class="checks"><li>目的は1つ、CTAは1つに絞る</li><li>「唯一のゴールに効くか？」で判断し、効かない要素は削る</li><li>シンプルは、速く・崩れにくく・直しやすく、ループも早く収束する</li></ul>
+  </section>
+
+  <!-- 8 FAQ + プレゼント -->
+  <section id="s8">
+    <div class="sec-h"><div class="no">8</div><h2>FAQ・プレゼント</h2></div>
+    <div class="faq">
+      <div class="qa"><div class="q">普通に「作って」と何が違う？</div><div class="a">合格条件を決めて達成まで自分で直すのがループ。人のチェック回数が減ります</div></div>
+      <div class="qa"><div class="q">サブエージェントって難しい？</div><div class="a">「採点する係を分ける」だけ。「機能/デザイン/モバイルを0-100で採点して100点まで直して」でOK</div></div>
+      <div class="qa"><div class="q">何回回るの？</div><div class="a">「全観点100点」で終了。「同じ指摘で3周」「6周」で一度止めて相談が目安</div></div>
+      <div class="qa"><div class="q">公開まで全部AI任せ？</div><div class="a">公開・決済など取り消せない操作の前は必ず人間が確認します</div></div>
+    </div>
+    <div class="secsub">今回のプレゼント（おまけ）</div>
+    <div class="box"><h3>🎁 配布キットの中身</h3>
+      <ul>
+      <li>壁打ち→/goal→サブエージェントでサイトを作る Codexキット一式</li>
+      <li>DESIGN.md 30選（配色・フォント・型を1枚選んで固定）</li>
+      <li>グラフィック・アニメ・機能の「名称＆プロンプト」早見表／参考Webサイト集</li>
+      <li>コンポーネント辞典・サイト作りのコツ・ループ入門</li>
+      </ul></div>
+  </section>
+
+  <footer>
+    <div class="frow">
+      <div class="lg"><svg width="132" height="30" style="color:#fff"><use href="#kawaru-logo"/></svg></div>
+      <a class="cta" href="https://github.com/fuuuuuuma/loop-website-builder-ja">資料・キットを見る（GitHub）</a>
+    </div>
+    <p class="src">出典：Anthropic「Getting Started with Loops」<a href="https://claude.com/blog/getting-started-with-loops">claude.com/blog/getting-started-with-loops</a> ／ Material 3 <a href="https://m3.material.io/components">m3.material.io/components</a> ／ 参考ギャラリー SANKOU!<br>
+      ※ 本資料は非公式まとめ。効果を保証するものではありません。全文（GitHub公開）・スライドは概要欄から。</p>
+  </footer>
+</div>
+</body>
+</html>
