@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>🎁 プレゼントキット — ループで完璧なWebサイトを1発生成</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{ --brand:#1C3461; --brand-deep:#16284A; --accent:#5BBCD4; --accent-deep:#2C7A93;
+  --ink:#1C3461; --ink-mid:#4A6080; --paper:#FFFFFF; --canvas:#EEF2F7; --line:rgba(28,52,97,.14);
+  --on-accent:#16284A; --brand-soft:rgba(28,52,97,.08); --brand-line:rgba(28,52,97,.22); --head:'Noto Sans JP'; }
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--canvas);color:var(--ink);font-family:'Noto Sans JP',-apple-system,'Hiragino Sans','Yu Gothic',sans-serif;line-height:1.75}
+.doc{max-width:880px;margin:0 auto;background:var(--paper);box-shadow:0 0 60px rgba(0,0,0,.10)}
+.hero{background:linear-gradient(160deg,var(--brand-soft) 0%,var(--paper) 70%);padding:44px 52px 34px;border-bottom:3px solid var(--brand-line)}
+.hero .brandrow{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.hero .brandrow img{width:50px;height:50px;border-radius:50%;border:2px solid #fff;box-shadow:0 2px 10px rgba(0,0,0,.16)}
+.hero .brandrow b{font-family:var(--head);font-weight:900;color:var(--brand-deep);font-size:16px;line-height:1.2}
+.hero .brandrow b small{display:block;font-size:11px;color:var(--ink-mid);font-weight:500}
+.eyebrow{font-family:var(--head);font-weight:900;color:var(--brand-deep);letter-spacing:2px;font-size:12px;margin-bottom:8px}
+h1{font-family:var(--head);font-weight:900;font-size:32px;line-height:1.3;color:var(--ink)}
+.hero p.sub{font-size:16px;color:var(--ink-mid);font-weight:700;margin-top:12px}
+section{padding:34px 52px;border-bottom:1px solid var(--line)}
+h2{font-family:var(--head);font-weight:900;font-size:21px;color:var(--ink);margin-bottom:8px}
+h2 .n{display:inline-flex;width:30px;height:30px;border-radius:50%;background:var(--accent);color:var(--on-accent);font-size:15px;align-items:center;justify-content:center;margin-right:10px;box-shadow:0 2px 0 var(--accent-deep);vertical-align:middle}
+p.desc{font-size:15px;color:var(--ink);margin-bottom:10px}
+ul.chk{list-style:none;margin:0 0 12px}
+ul.chk li{font-size:14px;color:var(--ink);padding:5px 0 5px 24px;position:relative}
+ul.chk li::before{content:'✔';position:absolute;left:2px;color:var(--brand);font-weight:900}
+pre.prompt{background:var(--ink);color:#ECECEA;border-radius:12px;padding:16px 18px;white-space:pre-wrap;word-break:break-word;font-size:13.5px;font-family:ui-monospace,Menlo,monospace;margin:10px 0}
+.btns{display:flex;gap:10px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:8px;background:var(--accent);border:2px solid var(--brand);color:var(--on-accent);border-radius:999px;padding:10px 22px;font-family:var(--head);font-weight:900;font-size:14px;cursor:pointer;text-decoration:none}
+.btn.ghost{background:var(--paper);border:1.5px solid var(--line);color:var(--brand-deep)}
+.btn:hover{filter:brightness(.97)}
+p.point{font-size:13px;color:var(--ink-mid);margin-top:10px}
+.note{background:var(--brand-soft);border:1.5px solid var(--brand-line);border-radius:12px;padding:16px 20px;font-size:14px;color:var(--ink)}
+.note b{color:var(--brand-deep)}
+ol.steps{margin:0 0 0 18px;font-size:14px;color:var(--ink)} ol.steps li{margin-bottom:6px}
+a.kitlink{color:var(--brand-deep);font-weight:700}
+.foot{padding:24px 52px;font-size:12px;color:var(--ink-mid)}
+</style>
+</head>
+<body>
+<div class="doc">
+  <div class="hero">
+    <div class="brandrow"><svg width="150" height="34" viewBox="0 0 406 93" style="color:var(--brand)" aria-label="Kawaru"><rect x="0" y="13.4815" width="7.93029" height="74.5447" fill="currentColor"/><path d="M18.2397 52.7235L24.2772 47.5817L57.8911 88.0582L48.3318 88.0582L18.2397 52.7235Z" fill="#5BBCD4"/><path d="M34.8933 49.5514L40.9308 44.4096L77.2278 88.0366L67.4075 88.0262L34.8933 49.5514Z" fill="#5BBCD4"/><rect x="57.1908" y="2.92276" width="7.93029" height="83.5485" transform="rotate(42.3764 57.1908 2.92276)" fill="currentColor"/><rect x="59.4772" width="7.93029" height="22.2048" fill="currentColor"/><rect x="44.4096" y="7.9303" width="7.93029" height="22.9978" transform="rotate(-90 44.4096 7.9303)" fill="currentColor"/><path d="M110.882 61.3999L110.204 47.3281L135.413 20.7649H148.958L126.233 45.2211L119.46 52.4451L110.882 61.3999ZM99.9703 73.4399V20.7649H112.086V73.4399H99.9703ZM136.015 73.4399L117.278 50.4886L125.254 41.8349L150.237 73.4399H136.015ZM181.053 73.4399V65.5386L180.301 63.8079V49.6609C180.301 47.1525 179.523 45.196 177.968 43.7914C176.463 42.3867 174.13 41.6844 170.97 41.6844C168.813 41.6844 166.681 42.0355 164.574 42.7379C162.517 43.39 160.761 44.293 159.306 45.4469L155.092 37.2446C157.299 35.6895 159.958 34.4855 163.069 33.6326C166.179 32.7798 169.339 32.3534 172.55 32.3534C178.721 32.3534 183.512 33.8082 186.923 36.7179C190.334 39.6275 192.04 44.1676 192.04 50.3381V73.4399H181.053ZM168.712 74.0419C165.552 74.0419 162.843 73.5151 160.585 72.4616C158.328 71.358 156.597 69.878 155.393 68.0219C154.189 66.1657 153.587 64.0838 153.587 61.7761C153.587 59.3681 154.164 57.2611 155.318 55.4551C156.522 53.6491 158.403 52.2445 160.962 51.2411C163.52 50.1876 166.856 49.6609 170.97 49.6609H181.731V56.5086H172.249C169.49 56.5086 167.584 56.9601 166.53 57.8631C165.527 58.7661 165.025 59.8949 165.025 61.2494C165.025 62.7544 165.602 63.9584 166.756 64.8614C167.96 65.7142 169.59 66.1406 171.647 66.1406C173.604 66.1406 175.359 65.6891 176.915 64.7861C178.47 63.833 179.599 62.4534 180.301 60.6474L182.107 66.0654C181.254 68.674 179.699 70.6556 177.441 72.0101C175.184 73.3646 172.274 74.0419 168.712 74.0419ZM213.443 73.4399L198.844 32.9554H209.906L222.021 67.7961H216.754L229.396 32.9554H239.329L251.594 67.7961H246.327L258.818 32.9554H269.203L254.529 73.4399H243.166L232.406 43.5656H235.867L224.73 73.4399H213.443ZM300.427 73.4399V65.5386L299.675 63.8079V49.6609C299.675 47.1525 298.897 45.196 297.342 43.7914C295.837 42.3867 293.504 41.6844 290.344 41.6844C288.187 41.6844 286.055 42.0355 283.948 42.7379C281.891 43.39 280.135 44.293 278.68 45.4469L274.466 37.2446C276.674 35.6895 279.332 34.4855 282.443 33.6326C285.553 32.7798 288.714 32.3534 291.924 32.3534C298.095 32.3534 302.886 33.8082 306.297 36.7179C309.708 39.6275 311.414 44.1676 311.414 50.3381V73.4399H300.427ZM288.086 74.0419C284.926 74.0419 282.217 73.5151 279.959 72.4616C277.702 71.358 275.971 69.878 274.767 68.0219C273.563 66.1657 272.961 64.0838 272.961 61.7761C272.961 59.3681 273.538 57.2611 274.692 55.4551C275.896 53.6491 277.777 52.2445 280.336 51.2411C282.894 50.1876 286.23 49.6609 290.344 49.6609H301.105V56.5086H291.623C288.864 56.5086 286.958 56.9601 285.904 57.8631C284.901 58.7661 284.399 59.8949 284.399 61.2494C284.399 62.7544 284.976 63.9584 286.13 64.8614C287.334 65.7142 288.964 66.1406 291.021 66.1406C292.978 66.1406 294.734 65.6891 296.289 64.7861C297.844 63.833 298.973 62.4534 299.675 60.6474L301.481 66.0654C300.628 68.674 299.073 70.6556 296.815 72.0101C294.558 73.3646 291.648 74.0419 288.086 74.0419ZM324.296 73.4399V32.9554H335.508V44.3934L333.928 41.0824C335.132 38.2229 337.063 36.0657 339.722 34.6109C342.381 33.1059 345.617 32.3534 349.429 32.3534V43.1894C348.928 43.1392 348.476 43.1141 348.075 43.1141C347.674 43.064 347.247 43.0389 346.796 43.0389C343.585 43.0389 340.976 43.967 338.97 45.8231C337.013 47.6291 336.035 50.4635 336.035 54.3264V73.4399H324.296ZM376.043 74.0419C372.681 74.0419 369.671 73.3897 367.013 72.0854C364.404 70.781 362.372 68.7995 360.917 66.1406C359.462 63.4316 358.735 59.9952 358.735 55.8314V32.9554H370.474V54.1006C370.474 57.4618 371.176 59.945 372.581 61.5504C374.036 63.1055 376.068 63.8831 378.676 63.8831C380.482 63.8831 382.088 63.5069 383.492 62.7544C384.897 61.9517 386.001 60.7477 386.803 59.1424C387.606 57.4869 388.007 55.43 388.007 52.9719V32.9554H399.746V73.4399H388.609V62.3029L390.641 65.5386C389.287 68.348 387.28 70.48 384.621 71.9349C382.012 73.3395 379.153 74.0419 376.043 74.0419Z" fill="currentColor"/></svg><b>AIエージェント / Kawaru<small>AIを使いこなす</small></b></div>
+    <div class="eyebrow">🎁 PRESENT KIT</div>
+    <h1>ループで完璧なWebサイトを作る<br>プロンプト＆キット</h1>
+    <p class="sub">下のプロンプトは<b>ワンクリックでコピー</b>、または<b>.mdでダウンロード</b>できます。キット全体は GitHub からどうぞ。</p>
+  </div>
+  <section id="kit1">
+    <h2><span class="n">1</span>壁打ちプロンプト（1発で作らせない）</h2>
+    <p class="desc">いきなり作らせず、一問一答でサイトの仕様（site-spec.md）を固めるための最初の指示。</p>
+    <ul class="chk"><li>Codex/Claude Code の最初のメッセージとして貼る。</li></ul>
+    <pre class="prompt" id="p1">これからWebサイトを作りたい。ただし今すぐ作らないで。
+まずプランモードで、一度に1問ずつ・各問に推奨案をつけて、私に壁打ちして。
+最低でも「目的（1つ）／見せる相手（1人）／ゴール(CTA1つ)／必要なページ・セクション／
+各ボタンの押した先／参考サイト／トンマナ／制約」を埋めて、site-spec.md にまとめてから見せて。</pre>
+    <div class="btns"><button class="btn" onclick="copyPrompt('p1', this)">📋 コピー</button><a class="btn ghost" href="kit/prompts/01-kabeuchi.md" download>⬇ ダウンロード（.md）</a></div>
+    <p class="point">💡 ここで目的とゴールを1つに絞れるほど、後のループが速く収束する。</p>
+  </section>
+  <section id="kit2">
+    <h2><span class="n">2</span>ループで各観点100点まで（サブエージェント採点）</h2>
+    <p class="desc">固めた仕様から、複数のサブエージェントが採点しながら100点まで自走で作り込むループの起動プロンプト。</p>
+    <ul class="chk"><li>壁打ちで site-spec.md を固めた後に送る（本キットのループ入口＝/goal）。</li></ul>
+    <pre class="prompt" id="p2">/goal site-spec.md のとおりのWebサイトを、3体以上のサブエージェントが各観点で100点を出すまで作り込む。
+観点=機能／デザイン／モバイル&amp;速度／コピー&amp;法規制。採点はサブエージェントが0-100で行い、自分では採点しない。
+「側だけ」で止めず、全ボタン・全リンク・全フォームの押した先まで実際に動かす（href="#"やダミーを残さない）。
+デザインは1つの配色トークン(:root)に固定し、参考サイトのトンマナに寄せる。要素は足しすぎない(Simple is the best)。
+全観点100点になるまで 実行→検証→修正 を繰り返し、なったら「GitHub Pages か Vercel か」を私に質問して公開まで。</pre>
+    <div class="btns"><button class="btn" onclick="copyPrompt('p2', this)">📋 コピー</button><a class="btn ghost" href="kit/prompts/02-loop-100.md" download>⬇ ダウンロード（.md）</a></div>
+    <p class="point">💡 採点は必ずサブエージェント（maker≠checker）。自分で「100点」と言わせない。</p>
+  </section>
+  <section id="kit3">
+    <h2><span class="n">3</span>「側だけ」チェック（押した先まで）</h2>
+    <p class="desc">見た目だけの“ガワ”になっていないか、全導線を実機で押して確認させるプロンプト。</p>
+    <ul class="chk"><li>ビルド後・公開前にそのまま送る。</li></ul>
+    <pre class="prompt" id="p3">今のサイトの全リンク・全ボタン・全フォームを実機で1つずつ押して、
+「押した先が存在するか・送信が成立するか・戻れるか」を確認して、
+動かない導線とリンク切れを一覧で出して。href="#" が残っていたら全部指摘して直して。</pre>
+    <div class="btns"><button class="btn" onclick="copyPrompt('p3', this)">📋 コピー</button><a class="btn ghost" href="kit/prompts/03-gawa-check.md" download>⬇ ダウンロード（.md）</a></div>
+    <p class="point">💡 href="#" やダミーが残っていないかが最重要。</p>
+  </section>
+  <section id="kit4">
+    <h2><span class="n">4</span>デザインをDESIGN.mdで固定</h2>
+    <p class="desc">配色・フォントを1枚のDESIGN.mdに固定し、途中でブレさせないための指示。</p>
+    <ul class="chk"><li>ビルド開始時、または見た目がバラつくときに送る。</li></ul>
+    <pre class="prompt" id="p4">配色は design-systems の DESIGN.md を1枚選んで :root を固定して。途中で色を足さないで。
+見出しフォントも DESIGN.md のものに。参考サイト（URL）のトンマナに寄せて、レイアウトはコピーしないで。</pre>
+    <div class="btns"><button class="btn" onclick="copyPrompt('p4', this)">📋 コピー</button><a class="btn ghost" href="kit/prompts/04-design-fix.md" download>⬇ ダウンロード（.md）</a></div>
+    <p class="point">💡 参考サイトはトンマナの当て先。レイアウトはコピーしない。</p>
+  </section>
+  <section id="kit5">
+    <h2><span class="n">5</span>画像だけ作らせる（GPT Image 2.0）</h2>
+    <p class="desc">背景・装飾・OG画像などをAIに1枚生成させるプロンプト。</p>
+    <ul class="chk"><li>ヒーローや装飾に画像が要るときに送る。</li></ul>
+    <pre class="prompt" id="p5">ヒーローの背景画像を1枚、GPT Image 2.0（gpt-image-2）で作って（横長・◯◯な雰囲気・文字は入れない）。
+重要な見出し・価格・CTAは画像に焼き込まず、HTMLテキストで置いて。生成後に崩れを目視して。</pre>
+    <div class="btns"><button class="btn" onclick="copyPrompt('p5', this)">📋 コピー</button><a class="btn ghost" href="kit/prompts/05-image.md" download>⬇ ダウンロード（.md）</a></div>
+    <p class="point">💡 Codexアプリ内蔵のGPT Image 2.0を使う（APIキー不要）。重要テキストは必ずHTMLに。</p>
+  </section>
+  <section id="kit6">
+    <h2><span class="n">6</span>公開（GitHub / Vercel・人間確認）</h2>
+    <p class="desc">100点になったら公開先を選ばせ、本番でも動くか確認させるプロンプト。</p>
+    <ul class="chk"><li>全観点100点になった後に送る。</li></ul>
+    <pre class="prompt" id="p6">全観点100点になったら、GitHub Pages と Vercel のどちらで公開するか私に聞いて。
+選んだ先に公開したら、本番URLが200を返すか・本番でも全導線が動くかを確認して報告して。
+（独自ドメイン・決済・フォーム実連携は、実行前に必ず私に確認して）</pre>
+    <div class="btns"><button class="btn" onclick="copyPrompt('p6', this)">📋 コピー</button><a class="btn ghost" href="kit/prompts/06-publish.md" download>⬇ ダウンロード（.md）</a></div>
+    <p class="point">💡 デプロイ・決済・外部連携は取り消せない操作。実行前に必ず人間が確認。</p>
+  </section>
+  <section id="fullkit">
+    <h2>キット全体を受け取る</h2>
+    <p class="desc">壁打ち→ループ→採点→公開までを回す一式（スキル／コマンド／DESIGN.md 30選／参考資料）は、リポジトリからまるごと使えます。</p>
+    <div class="btns"><a class="btn" href="https://github.com/fuuuuuuma/loop-website-builder-ja">GitHub でキットを開く</a>
+<a class="btn ghost" href="kit/README.md">キットの使い方（README）</a></div>
+  </section>
+  <section id="howto">
+    <h2>受け取り方・使い方</h2>
+    <ol class="steps">
+      <li>使いたいプロンプトの「📋 コピー」を押す（または「⬇ ダウンロード」で .md 保存）。GitHub の <code>kit/prompts/</code> からも受け取れます。</li>
+      <li>Codex デスクトップアプリ でこのキットのフォルダを開き、まず「壁打ちプロンプト」を貼る。</li>
+      <li>仕様が固まったら「ループ」プロンプトで各観点100点まで自走 → 公開まで。</li>
+    </ol>
+    <div class="note" style="margin-top:14px;"><b>⚠️ 使うときの注意</b>：AIの出力（コピー・数値・リンク先）は<b>確定前に必ずレビュー</b>を。公開・決済・外部連携などの取り消せない操作は、実行前に人間が確認してください。</div>
+  </section>
+  <div class="foot">🎁 ループで完璧なWebサイトを1発生成 のプレゼントキット。自由に使って・配ってOK（キット本体は MIT）。</div>
+</div>
+<script>
+function copyTextWithFallback(text){
+  return navigator.clipboard.writeText(text).then(()=>true).catch(()=>{
+    const ta=document.createElement('textarea');ta.value=text;document.body.appendChild(ta);ta.select();
+    const ok=document.execCommand('copy');ta.remove();return ok;});
+}
+function showCopyResult(btn,ok){
+  const o=btn.textContent;
+  btn.textContent=ok?'✔ コピーしました！':'✖ コピーできませんでした。⬇ ダウンロードをご利用ください';
+  setTimeout(()=>{btn.textContent=o;},ok?1800:3500);
+}
+async function copyPrompt(id,btn){
+  const ok=await copyTextWithFallback(document.getElementById(id).textContent);
+  showCopyResult(btn,ok);
+}
+</script>
+</body>
+</html>

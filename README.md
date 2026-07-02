@@ -5,7 +5,7 @@
 > ボタンの押した先まで動く「完璧なWebサイト」を仕上げる方法を、はじめての人にも分かるようにまとめました。
 > （AIエージェントチャンネル・解説用リサーチノート／視聴者は初心者を含む前提）
 
-📊 [スライド資料を見る](./slides.html) ｜ 📄 [1枚まとめ資料を見る](./onepager.html) ｜ 🎁 [プレゼントのキットを見る](./kit/)
+📊 [スライド資料を見る](./slides.html) ｜ 📄 [1枚まとめ資料を見る](./onepager.html) ｜ 🎁 [プレゼントを受け取る](./present.html) ｜ 📦 [キット一式](./kit/)
 
 ## TL;DR（3行）
 
@@ -279,6 +279,9 @@ Codex に渡すと、**壁打ちから始まり `/goal` とサブエージェン
 | **③ グラフィック・アニメ・機能の名称とプロンプト** | 「こういう見た目/動きにしたい」を一言で頼める早見表 | [`kit/reference/graphics-animation.md`](./kit/reference/graphics-animation.md) |
 | **④ 参考Webサイト集** | トンマナの当て先を探すギャラリー一覧 | [`kit/reference/reference-sites.md`](./kit/reference/reference-sites.md) |
 | **⑤ コンポーネント辞典 / サイト作りのコツ / ループ入門** | 部品の名前・構成の型・ループの考え方 | [`kit/reference/`](./kit/reference/) |
+| **⑥ すぐ使えるプロンプト（コピペ）** | 壁打ち／ループ(`/goal`)／「側だけ」チェック／画像／公開の即使えるプロンプト | [`present.html`](./present.html)・[`kit/prompts/`](./kit/prompts/) |
+
+**受け取り方**: [🎁 プレゼントページ（present.html）](./present.html) の各ボタンで**コピー**、または各プロンプトを **.md でダウンロード**。GitHub の [`kit/prompts/`](./kit/prompts/) のコードブロックからもコピーできます。
 
 > キットの使い方は [`kit/README.md`](./kit/README.md)。壁打ちは GrillMe（MIT）、ループは goal-setter / makeloop（MIT）と
 > 公式ブログ由来。謝辞・ライセンスは [`kit/CREDITS.md`](./kit/CREDITS.md)（本キットは MIT）。
